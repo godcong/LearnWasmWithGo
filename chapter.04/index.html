@@ -1,0 +1,70 @@
+<!doctype html>
+<!--
+Copyright 2018 The Go Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+-->
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Go wasm</title>
+</head>
+
+<body>
+	<script src="wasm_exec.js"></script>
+	<script>
+		if (!WebAssembly.instantiateStreaming) { // polyfill
+			WebAssembly.instantiateStreaming = async (resp, importObject) => {
+				const source = await (await resp).arrayBuffer();
+				return await WebAssembly.instantiate(source, importObject);
+			};
+		}
+
+		const go = new Go();
+		let mod, inst;
+		var ass = WebAssembly.instantiateStreaming(fetch("example.wasm"), go.importObject).then((result) => {
+			mod = result.module;
+			inst = result.instance;
+			// document.getElementById("runButton").disabled = false;
+		});
+
+		window.onload= function () {
+           ass.then(function () {
+               go.run(inst);
+               WebAssembly.instantiate(mod, go.importObject);
+           })
+        }
+
+	</script>
+
+
+
+    <button onclick="number('7')" id="btn7" value="7" >7</button>
+    <button onclick="number('8')" id="btn8" value="8">8</button>
+    <button onclick="number('9')" id="btn9" value="9">9</button>
+    <button onclick="symbol('+')" id="plus" value="plus">+</button>
+    <br/>
+    <button onclick="number('4')" id="btn4" value="4" >4</button>
+    <button onclick="number('5')" id="btn5" value="5">5</button>
+    <button onclick="number('6')" id="btn6" value="6">6</button>
+    <button onclick="symbol('-')" id="minus" value="minus">-</button>
+    <br/>
+    <button onclick="number('1')" id="btn1" value="1" >1</button>
+    <button onclick="number('2')" id="btn2" value="2">2</button>
+    <button onclick="number('3')" id="btn3" value="3">3</button>
+    <button onclick="symbol('*')" id="ride" value="ride">*</button>
+    <br/>
+
+    <button onclick="symbol('clr')" id="clr" value="clr">C</button>
+    <button onclick="number('0')" id="btn0" value="0" >0</button>
+    <button onclick="symbol('.')" id="dot" value="." >.</button>
+    <button onclick="symbol('/')" id="divide" value="divide">/</button>
+    <button onclick="calc()" id="calc" >=</button>
+
+
+
+
+</body>
+
+</html>
