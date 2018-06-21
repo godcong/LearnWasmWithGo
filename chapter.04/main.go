@@ -33,18 +33,18 @@ func main() {
 	<-c
 }
 
-func calc(numbers string) int {
+func calc(numbers string) float64 {
 	var value []string
 	if strings.Index(numbers, "+") >= 0 {
 		value = strings.Split(numbers, "+")
 		if len(value) >= 2 {
-			rlt := 0
+			rlt := 0.0
 			for _, v := range value {
 				if canSplite(v) {
 					rlt += calc(v)
 				} else {
 					vv, _ := strconv.Atoi(v)
-					rlt += vv
+					rlt += float64(vv)
 				}
 			}
 			return rlt
@@ -53,13 +53,13 @@ func calc(numbers string) int {
 	} else if strings.Index(numbers, "-") >= 0 {
 		value = strings.Split(numbers, "-")
 		if len(value) >= 2 {
-			rlt := 0
+			rlt := 0.0
 			for _, v := range value {
 				if canSplite(v) {
 					rlt -= calc(v)
 				} else {
 					vv, _ := strconv.Atoi(v)
-					rlt -= vv
+					rlt -= float64(vv)
 				}
 			}
 			return rlt
@@ -67,7 +67,7 @@ func calc(numbers string) int {
 	} else if strings.Index(numbers, "*") >= 0 {
 		value = strings.Split(numbers, "*")
 		if len(value) >= 2 {
-			rlt := 0
+			rlt := 0.0
 			for i, v := range value {
 				if canSplite(v) {
 					if i == 0 {
@@ -78,9 +78,9 @@ func calc(numbers string) int {
 				} else {
 					vv, _ := strconv.Atoi(v)
 					if i == 0 {
-						rlt = vv
+						rlt = float64(vv)
 					} else {
-						rlt *= vv
+						rlt *= float64(vv)
 					}
 				}
 			}
@@ -89,7 +89,7 @@ func calc(numbers string) int {
 	} else if strings.Index(numbers, "/") >= 0 {
 		value = strings.Split(numbers, "/")
 		if len(value) >= 2 {
-			rlt := 0
+			rlt := 0.0
 			for i, v := range value {
 				if canSplite(v) {
 					if i == 0 {
@@ -100,9 +100,9 @@ func calc(numbers string) int {
 				} else {
 					vv, _ := strconv.Atoi(v)
 					if i == 0 {
-						rlt = vv
+						rlt = float64(vv)
 					} else {
-						rlt /= vv
+						rlt /= float64(vv)
 					}
 				}
 			}
@@ -112,7 +112,7 @@ func calc(numbers string) int {
 	}
 	if len(value) == 1 {
 		left, _ := strconv.Atoi(value[0])
-		return left
+		return float64(left)
 	}
 	return 0
 
