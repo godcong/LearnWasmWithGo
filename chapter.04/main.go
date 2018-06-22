@@ -1,10 +1,10 @@
 package main
 
 import (
-	"syscall/js"
-	"strconv"
 	"fmt"
+	"strconv"
 	"strings"
+	"syscall/js"
 )
 
 func main() {
@@ -12,12 +12,13 @@ func main() {
 	var numbers string
 	calc := func(i []js.Value) {
 		//js.Global.Set("output", numbers)
-		fmt.Println(numbers)
-		fmt.Println(calc(numbers))
+
+		fmt.Println("calculator:", calc(numbers))
 	}
 
 	number := func(i []js.Value) {
 		numbers += strconv.Itoa(i[0].Int())
+		fmt.Println(numbers)
 	}
 
 	symbol := func(i []js.Value) {
@@ -26,6 +27,7 @@ func main() {
 			return
 		}
 		numbers += i[0].String()
+		fmt.Println(numbers)
 	}
 	js.Global.Set("symbol", js.NewCallback(symbol))
 	js.Global.Set("calc", js.NewCallback(calc))
@@ -39,12 +41,20 @@ func calc(numbers string) float64 {
 		value = strings.Split(numbers, "+")
 		if len(value) >= 2 {
 			rlt := 0.0
-			for _, v := range value {
-				if canSplite(v) {
-					rlt += calc(v)
+			for i, v := range value {
+				if canSplit(v) {
+					if i == 0 {
+						rlt = calc(v)
+					} else {
+						rlt += calc(v)
+					}
 				} else {
 					vv, _ := strconv.Atoi(v)
-					rlt += float64(vv)
+					if i == 0 {
+						rlt = float64(vv)
+					} else {
+						rlt += float64(vv)
+					}
 				}
 			}
 			return rlt
@@ -54,12 +64,20 @@ func calc(numbers string) float64 {
 		value = strings.Split(numbers, "-")
 		if len(value) >= 2 {
 			rlt := 0.0
-			for _, v := range value {
-				if canSplite(v) {
-					rlt -= calc(v)
+			for i, v := range value {
+				if canSplit(v) {
+					if i == 0 {
+						rlt = calc(v)
+					} else {
+						rlt -= calc(v)
+					}
 				} else {
 					vv, _ := strconv.Atoi(v)
-					rlt -= float64(vv)
+					if i == 0 {
+						rlt = float64(vv)
+					} else {
+						rlt -= float64(vv)
+					}
 				}
 			}
 			return rlt
@@ -69,7 +87,7 @@ func calc(numbers string) float64 {
 		if len(value) >= 2 {
 			rlt := 0.0
 			for i, v := range value {
-				if canSplite(v) {
+				if canSplit(v) {
 					if i == 0 {
 						rlt = calc(v)
 					} else {
@@ -91,7 +109,7 @@ func calc(numbers string) float64 {
 		if len(value) >= 2 {
 			rlt := 0.0
 			for i, v := range value {
-				if canSplite(v) {
+				if canSplit(v) {
 					if i == 0 {
 						rlt = calc(v)
 					} else {
@@ -118,7 +136,7 @@ func calc(numbers string) float64 {
 
 }
 
-func canSplite(v string) bool {
+func canSplit(v string) bool {
 	if strings.Index(v, "+") >= 0 {
 		return true
 	} else if strings.Index(v, "-") >= 0 {
