@@ -19,4 +19,4 @@
     export GOOS=js
 
 ### 现在开始我们的wasm旅程吧。
-每个chapter目录下有对应的，chapter.**.md文档说明哦
+每个chapter目录下有对应的，chapter.**.md文档说明,可以直接按照说明操作
